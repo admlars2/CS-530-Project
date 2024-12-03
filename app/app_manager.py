@@ -1,7 +1,7 @@
 import pygame
 from ui import MainMenu, Database, StudyMenu
 from constants import WHITE, GRAY, japanese_font, button_color, hover_color
-from ui.elements import Button
+from ui.elements import Button, FlipScreenButton
 
 class AppManager:
     # Page keys
@@ -22,19 +22,19 @@ class AppManager:
         self.clock = pygame.time.Clock()
         self.running = True
 
+        self.default_header = [
+            FlipScreenButton(self, (0.9, 0.1, 0.1, 0.05),
+                   button_color, hover_color),
+            Button(self, (0.1, 0.1, 0.1, 0.05), "←",
+                   button_color, hover_color)
+        ]
+
         # Create pages after that might use previously defined variables
         self.pages = {
             self.MAIN: MainMenu(screen, self),
             self.DATABASE: Database(screen, self),
             self.STUDYMENU: StudyMenu(screen, self)
         }
-
-        self.default_header = [
-            Button(self, (0.9, 0.1, 0.1, 0.05), "↜",
-                   button_color, hover_color),
-            Button(self, (0.1, 0.1, 0.1, 0.05), "←",
-                   button_color, hover_color)
-        ]
 
         self.current_page = self.pages[self.MAIN]  # Pass self as manager
 
@@ -89,7 +89,7 @@ class AppManager:
 
             # Map coordinates and adjust for the center of rotation
             x_pixel = y_prop * self.screen_width - width // 2
-            y_pixel = x_prop * self.screen_height - height // 2
+            y_pixel = (1 - x_prop) * self.screen_height - height // 2
         else:
             # Standard calculation for landscape orientation
             width = width_prop * self.screen_width

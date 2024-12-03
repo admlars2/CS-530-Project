@@ -2,11 +2,12 @@
 name = "kanji-trainer"
 version = "0.1.0"
 description = ""
-authors = ["Adam Larson <admlars2@gmail.com>"]
+authors = ["Adam Larson <alarson7767@sdsu.edu>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pygame = "^2.6.1"
 
 
 [build-system]
