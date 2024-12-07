@@ -1,7 +1,7 @@
 import pygame
 
 class Button:
-    def __init__(self, manager, rect_prop, text, color, hover_color):
+    def __init__(self, manager, rect_prop, text, color, hover_color, centered = True, font = None, corrected = False):
         self.manager = manager  # Reference to AppManager for coordinate mapping
         self.rect_prop = rect_prop  # Proportional rectangle (x_prop, y_prop, width_prop, height_prop)
         self.text = text
@@ -9,10 +9,18 @@ class Button:
         self.hover_color = hover_color
         self.is_hovered = False
         self.rect_obj = None
+        self.centered = centered
+        self.corrected = corrected
+
+        if not font:
+            self.font = self.manager.font
 
     def render(self, screen):
         # Map logical rectangle to screen coordinates based on orientation
-        x, y, width, height = self.manager.map_rect(*self.rect_prop)
+        x, y, width, height = self.manager.map_rect(*self.rect_prop, corrected = self.corrected)
+        if self.centered:
+            x -= width // 2
+            y -= height // 2
         self.rect_obj = pygame.Rect((x, y), (width, height))
 
         # Draw the button rectangle
@@ -20,7 +28,7 @@ class Button:
         pygame.draw.rect(screen, current_color, self.rect_obj)
 
         # Render the text
-        text_surface = self.manager.font.render(self.text, True, self.manager.font_color)
+        text_surface = self.font.render(self.text, True, self.manager.font_color)
         if self.manager.is_portrait:
             text_surface = pygame.transform.rotate(text_surface, 90)
         text_rect = text_surface.get_rect(center=self.rect_obj.center)

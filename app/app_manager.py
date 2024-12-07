@@ -1,6 +1,6 @@
 import pygame
 from ui import MainMenu, Database, StudyMenu
-from constants import WHITE, GRAY, japanese_font, button_color, hover_color
+from constants import WHITE, GRAY, japanese_font, japanese_font_small, button_color, hover_color
 from ui.elements import Button, FlipScreenButton
 
 class AppManager:
@@ -19,6 +19,7 @@ class AppManager:
         self.font_color = WHITE
         self.is_portrait = True
         self.font = japanese_font
+        self.font_small = japanese_font_small
         self.clock = pygame.time.Clock()
         self.running = True
 
@@ -80,23 +81,25 @@ class AppManager:
             pygame.display.flip()
             self.clock.tick(60)
 
-    def map_rect(self, x_prop, y_prop, width_prop, height_prop):
+    def map_rect(self, x_prop, y_prop, width_prop, height_prop, corrected=False):
         """Map proportional coordinates to pixel coordinates based on orientation."""
         if self.is_portrait:
             # Swap width and height proportions for rotation
-            width = height_prop * self.screen_height
-            height = width_prop * self.screen_width
+            width = height_prop * self.screen_width
+            height = width_prop * self.screen_height
 
             # Map coordinates and adjust for the center of rotation
-            x_pixel = y_prop * self.screen_width - width // 2
-            y_pixel = (1 - x_prop) * self.screen_height - height // 2
+            x_pixel = y_prop * self.screen_width
+            x_pixel_prop = (1-x_prop) if x_prop != 0 else x_prop
+            x_pixel_prop = x_pixel_prop if not corrected else (1-x_prop-width_prop)
+            y_pixel = x_pixel_prop * self.screen_height
         else:
             # Standard calculation for landscape orientation
             width = width_prop * self.screen_width
             height = height_prop * self.screen_height
 
-            x_pixel = x_prop * self.screen_width - width // 2
-            y_pixel = y_prop * self.screen_height - height // 2
+            x_pixel = x_prop * self.screen_width
+            y_pixel = y_prop * self.screen_height
 
         # Convert to integers and return all values
         return int(x_pixel), int(y_pixel), int(width), int(height)
