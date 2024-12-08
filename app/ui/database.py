@@ -1,6 +1,5 @@
-import pygame
-from ui import Page
-from ui.elements import Button, SearchBar
+from ..ui import Page
+from ..ui.elements import SearchBar
 
 class Database(Page):
     def __init__(self, screen, manager):
@@ -16,7 +15,6 @@ class Database(Page):
 
         # Assign on_click methods
         self.components[0].on_click = self.manager.toggle_orientation
-        self.components[1].on_click = self.main_menu
 
     def render(self):
         """Render the page content."""
@@ -27,7 +25,3 @@ class Database(Page):
         """Handle user input."""
         for component in self.components:
             component.handle_event(event)
-
-    def main_menu(self):
-        """Handle Database Search button click."""
-        self.manager.change_page(self.manager.MAIN)

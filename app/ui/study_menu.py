@@ -1,5 +1,4 @@
-import pygame
-from ui import Page
+from ..ui import Page
 
 class StudyMenu(Page):
     def __init__(self, screen, manager):

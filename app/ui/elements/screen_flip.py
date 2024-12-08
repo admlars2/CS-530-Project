@@ -1,12 +1,12 @@
 import pygame
 import math
-from ui.elements import Button
-from constants import WHITE
+from ...ui.elements import Button
+from ...config import BUTTON_COLOR, BUTTON_HOVER_COLOR, FONT_COLOR
 
 class FlipScreenButton(Button):
-    def __init__(self, manager, rect_prop, color, hover_color):
+    def __init__(self, manager, rect_prop, color = BUTTON_COLOR, hover_color = BUTTON_HOVER_COLOR):
         super().__init__(manager, rect_prop, "", color, hover_color)
-        self.arrow_color = WHITE  # Default arrow color (black)
+        self.arrow_color = FONT_COLOR
         self.on_click = self.manager.toggle_orientation
 
     def render(self, screen):
@@ -45,4 +45,3 @@ class FlipScreenButton(Button):
 
     def on_click(self):
         """Handle the flip screen logic."""
-        ...

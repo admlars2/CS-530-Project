@@ -1,0 +1,15 @@
+general:
+  app_title: "KANJI TRAINER"
+  screen_width: 800
+  screen_height: 480
+  fps: 60
+
+fonts:
+  font: "Noto Sans Mono CJK JP Regular.otf"
+
+keyboard:
+  layout:
+    - "QWERTYUIOP"
+    - "ASDFGHJKL"
+    - "ZXCVBNM"
+  romaji_json_name: "romaji_map.json"

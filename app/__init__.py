@@ -1,14 +1,12 @@
-# main.py
-import pygame
-from app_manager import AppManager
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
-import os, sys
+import pygame, os, sys
+from .app_manager import AppManager
+from .config import SCREEN_WIDTH, SCREEN_HEIGHT
 
 def is_raspberry_pi():
     # Detect if running on Raspberry Pi
     return os.name.startswith("arm")
 
-def main():
+def run_app():
     pygame.init()
     
     # Check if running on Raspberry Pi for full-screen mode
@@ -23,8 +21,4 @@ def main():
     app_manager.run()
 
     pygame.quit()
-
     sys.exit()
-
-if __name__ == "__main__":
-    main()

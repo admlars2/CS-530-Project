@@ -1,7 +1,8 @@
 import pygame
+from ...config import BUTTON_COLOR, BUTTON_HOVER_COLOR
 
 class Button:
-    def __init__(self, manager, rect_prop, text, color, hover_color, centered = True, font = None, corrected = False):
+    def __init__(self, manager, rect_prop, text, color = BUTTON_COLOR, hover_color = BUTTON_HOVER_COLOR, centered = True, font = None, corrected = False):
         self.manager = manager  # Reference to AppManager for coordinate mapping
         self.rect_prop = rect_prop  # Proportional rectangle (x_prop, y_prop, width_prop, height_prop)
         self.text = text
@@ -35,20 +36,26 @@ class Button:
         screen.blit(text_surface, text_rect)    # Display to the screen
 
     def handle_event(self, event):
-        if event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN):
-            mouse_x, mouse_y = pygame.mouse.get_pos()
+        if event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.FINGERMOTION, pygame.FINGERDOWN):
+            # Get the input coordinates based on event type
+            if event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN):
+                input_x, input_y = pygame.mouse.get_pos()
+            elif event.type in (pygame.FINGERMOTION, pygame.FINGERDOWN):
+                input_x = int(event.x * self.manager.screen_width)  # Normalize finger position to screen size
+                input_y = int(event.y * self.manager.screen_height)
+
             try:
-                rect_collision = self.rect_obj.collidepoint(mouse_x, mouse_y)
+                rect_collision = self.rect_obj.collidepoint(input_x, input_y)
             except:
                 return
-            
+
             if rect_collision:
-                if event.type == pygame.MOUSEMOTION:
+                if event.type in (pygame.MOUSEMOTION, pygame.FINGERMOTION):
                     self.is_hovered = True
-                elif event.type == pygame.MOUSEBUTTONDOWN:
+                elif event.type in (pygame.MOUSEBUTTONDOWN, pygame.FINGERDOWN):
                     self.on_click()
             else:
-                if event.type == pygame.MOUSEMOTION:
+                if event.type in (pygame.MOUSEMOTION, pygame.FINGERMOTION):
                     self.is_hovered = False
 
     def on_click(self):

@@ -1,0 +1,17 @@
+appearance:
+  background_color: "#C8C8C8"
+  font_color: "#FFFFFF"
+  button_color: "#4682B4"
+  button_hover_color: "#6495ED"
+  search_bar_color: "#787878"
+  search_active_color: "#646464"
+  keyboard_active_color: "#696969"
+
+  font_size_large: 50
+  font_size_med: 24
+  font_size_small: 16
+
+writing:
+  brush_size: 5
+  feedback_correct_color: "#00FF00"
+  feedback_incorrect_color: "#FF0000"

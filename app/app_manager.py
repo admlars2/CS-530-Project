@@ -1,7 +1,7 @@
 import pygame
-from ui import MainMenu, Database, StudyMenu
-from constants import WHITE, GRAY, japanese_font, japanese_font_small, button_color, hover_color
-from ui.elements import Button, FlipScreenButton
+from .ui import MainMenu, Database, StudyMenu
+from .config import BACKGROUND_COLOR, FONT_COLOR, FONT_MED
+from .ui.elements import Button, FlipScreenButton
 
 class AppManager:
     # Page keys
@@ -15,20 +15,19 @@ class AppManager:
         self.screen_width = screen.get_width()
         self.screen_height = screen.get_height()
         self.screen = screen
-        self.background_color = GRAY
-        self.font_color = WHITE
+        self.background_color = BACKGROUND_COLOR
+        self.font_color = FONT_COLOR
         self.is_portrait = True
-        self.font = japanese_font
-        self.font_small = japanese_font_small
+        self.font = FONT_MED
         self.clock = pygame.time.Clock()
         self.running = True
 
         self.default_header = [
-            FlipScreenButton(self, (0.9, 0.1, 0.1, 0.05),
-                   button_color, hover_color),
-            Button(self, (0.1, 0.1, 0.1, 0.05), "←",
-                   button_color, hover_color)
+            FlipScreenButton(self, (0.9, 0.1, 0.1, 0.05)),
+            Button(self, (0.1, 0.1, 0.1, 0.05), "←")
         ]
+
+        self.default_header[1].on_click = lambda: self.change_page(self.MAIN)
 
         # Create pages after that might use previously defined variables
         self.pages = {

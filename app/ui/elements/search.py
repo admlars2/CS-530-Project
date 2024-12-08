@@ -1,15 +1,16 @@
 import pygame
-from ui.elements import Button
-from constants import KEYBOARD_LAYOUT, ROMAJI_MAP
+from ...ui.elements import Button
+from ...config import KEYBOARD_LAYOUT, ROMAJI_MAP, SEARCH_BAR_COLOR, SEARCH_ACTIVE_COLOR, KEYBOARD_ACTIVE_COLOR
 
 class SearchBar:
-    def __init__(self, manager, rect_prop, centered=True, placeholder_text='', color=(120, 120, 120), active_color=(100, 100, 100)):
+    def __init__(self, manager, rect_prop, centered=True, placeholder_text='', color=SEARCH_BAR_COLOR, active_color=SEARCH_ACTIVE_COLOR, keyboard_active_color=KEYBOARD_ACTIVE_COLOR):
         self.manager = manager  # Reference to AppManager
         self.rect_prop = rect_prop  # Proportional rectangle (x_prop, y_prop, width_prop, height_prop)
         self.placeholder_text = placeholder_text
         self.text: str = ''
         self.color = color
         self.active_color = active_color
+        self.keyboard_active_color = keyboard_active_color
         self.is_active = False
         self.rect_obj = None
         self.cursor_visible = True
@@ -17,7 +18,7 @@ class SearchBar:
         self.max_length = 30
         self.centered=centered
         
-        self.keyboard_props = (0, 0.5, 1, 0.5)
+        self.keyboard_props = (0, 0.5, 1, 0.5) # Bottom half of screen
         self.keyboard_buttons = []
         self.mode = "EN"
         self.romaji_buffer = ""
@@ -161,14 +162,12 @@ class SearchBar:
                     return on_click
 
                 # Create the button
-                button_color = (200, 200, 200)
-                hover_color = (170, 170, 170)
                 btn = Button(
                     manager=self.manager, 
                     rect_prop=(button_x_prop, button_y_prop, key_width_prop, key_height_prop), 
                     text=key_char, 
-                    color=button_color, 
-                    hover_color=hover_color,
+                    color=self.color, 
+                    hover_color=self.keyboard_active_color,
                     centered=False,
                     corrected=True
                 )
@@ -179,7 +178,7 @@ class SearchBar:
         x, y, width, height = self.manager.map_rect(0, 0.5, 1, 0.5)
         self.rect_obj = pygame.Rect((x, y), (width, height))
 
-        current_color = self.active_color if self.is_active else self.color
+        current_color = self.active_color
         pygame.draw.rect(screen, current_color, self.rect_obj, border_radius=5)
 
         for button in self.keyboard_buttons:
