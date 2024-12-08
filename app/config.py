@@ -7,8 +7,8 @@ def load_config(file_name):
     with open(file_path, "r") as file:
         return yaml.safe_load(file)
 
-def load_json(file_name):
-    file_path = os.path.join(project_root, "app", "config", file_name)
+def load_json(file_path):
+    file_path = os.path.join(project_root, file_path)
     with open(file_path, "r", encoding="utf-8") as file:
         return json.load(file)
 
@@ -51,8 +51,8 @@ except FileNotFoundError:
 # Keyboard Settings
 KEYBOARD_LAYOUT = static_config["keyboard"]["layout"]
 
-romaji_json_name = static_config["keyboard"]["romaji_json_name"]
-ROMAJI_MAP = load_json(romaji_json_name)
+romaji_json_path = static_config["keyboard"]["romaji_json_path"]
+ROMAJI_MAP = load_json(romaji_json_path)
 
 BACKGROUND_COLOR = dynamic_config["appearance"]["background_color"]
 FONT_COLOR = dynamic_config["appearance"]["font_color"]

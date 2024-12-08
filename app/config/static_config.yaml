@@ -12,4 +12,4 @@ keyboard:
     - "QWERTYUIOP"
     - "ASDFGHJKL"
     - "ZXCVBNM"
-  romaji_json_name: "romaji_map.json"
+  romaji_json_path: "database/data/romaji_map.json"
