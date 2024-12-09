@@ -13,3 +13,7 @@ keyboard:
     - "ASDFGHJKL"
     - "ZXCVBNM"
   romaji_json_path: "database/data/romaji_map.json"
+
+database:
+  database_path: "database/kanji.db"
+  kanjivg_folder: "database/kanjivg/"

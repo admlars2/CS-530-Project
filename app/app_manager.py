@@ -1,17 +1,21 @@
-import pygame
-from .ui import MainMenu, Database, StudyMenu
+import pygame, io, cairo
+from .ui import MainMenu, Database, StudyMenu, Word
 from .config import BACKGROUND_COLOR, FONT_COLOR, FONT_MED
 from .ui.elements import Button, FlipScreenButton
+from .database import WordDatabase
 
 class AppManager:
     # Page keys
     MAIN = 'main'
     DATABASE = 'database'
     STUDYMENU = 'study_menu'
+    WORD = 'word'
 
-    PAGE_KEYS = {MAIN, DATABASE, STUDYMENU}
+    PAGE_KEYS = {MAIN, DATABASE, STUDYMENU, WORD}
 
     def __init__(self, screen: pygame.Surface):
+        self.word_database = WordDatabase()
+
         self.screen_width = screen.get_width()
         self.screen_height = screen.get_height()
         self.screen = screen
@@ -33,10 +37,14 @@ class AppManager:
         self.pages = {
             self.MAIN: MainMenu(screen, self),
             self.DATABASE: Database(screen, self),
-            self.STUDYMENU: StudyMenu(screen, self)
+            self.STUDYMENU: StudyMenu(screen, self),
+            self.WORD: Word(screen, self)
         }
 
         self.current_page = self.pages[self.MAIN]  # Pass self as manager
+
+    def close_dbs(self):
+        self.word_database.close()
 
     def set_background_color(self, color):
         """Change the background color."""
@@ -102,3 +110,11 @@ class AppManager:
 
         # Convert to integers and return all values
         return int(x_pixel), int(y_pixel), int(width), int(height)
+    
+    def render_svg(self, svg_path, x, y, width, height):
+        png_image = pygame.image.load(svg_path)
+
+        scaled_image = pygame.transform.smoothscale(png_image, (width, height))
+        if self.is_portrait:
+            scaled_image = pygame.transform.rotate(scaled_image, 90)
+        self.screen.blit(scaled_image, (x, y))

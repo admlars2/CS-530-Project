@@ -1,8 +1,8 @@
 import pygame
-from ...ui.elements import Button
-from ...config import KEYBOARD_LAYOUT, ROMAJI_MAP, SEARCH_BAR_COLOR, SEARCH_ACTIVE_COLOR, KEYBOARD_ACTIVE_COLOR
+from . import Button
+from ...config import KEYBOARD_LAYOUT, ROMAJI_MAP, SEARCH_BAR_COLOR, SEARCH_ACTIVE_COLOR, KEYBOARD_ACTIVE_COLOR, ENGLISH, JAPANESE
 
-class SearchBar:
+class InputBar:
     def __init__(self, manager, rect_prop, centered=True, placeholder_text='', color=SEARCH_BAR_COLOR, active_color=SEARCH_ACTIVE_COLOR, keyboard_active_color=KEYBOARD_ACTIVE_COLOR):
         self.manager = manager  # Reference to AppManager
         self.rect_prop = rect_prop  # Proportional rectangle (x_prop, y_prop, width_prop, height_prop)
@@ -20,7 +20,7 @@ class SearchBar:
         
         self.keyboard_props = (0, 0.5, 1, 0.5) # Bottom half of screen
         self.keyboard_buttons = []
-        self.mode = "EN"
+        self.mode = ENGLISH
         self.romaji_buffer = ""
 
         self.generate_keyboard()
@@ -134,21 +134,23 @@ class SearchBar:
                     def on_click():
                         if c == "MODE":
                             # Toggle mode
-                            self.mode = "JP" if self.mode == "EN" else "EN"
+                            self.mode = JAPANESE if self.mode == ENGLISH else ENGLISH
+                            self.romaji_buffer = ""
                         elif c == "ENTER":
                             # Execute search
-                            self.on_search(self.text)
+                            self.on_search(self.text, self.mode)
                             self.text = ""
+                            self.romaji_buffer = ""
                         elif c == "←":
                             self.text = self.text[:-1]
-                            if self.mode == "JP":
+                            if self.mode == JAPANESE:
                                 self.romaji_buffer = self.romaji_buffer[:-1]
                         else:
                             # Append character
                             if len(self.text) < self.max_length:
                                 self.text += c.lower()
                                 # Handle romaji conversion if JP mode
-                                if self.mode == "JP":
+                                if self.mode == JAPANESE:
                                     self.romaji_buffer += c.lower()
                                     # Check if romaji buffer forms a valid kana
                                     if self.romaji_buffer in ROMAJI_MAP:
@@ -158,6 +160,9 @@ class SearchBar:
                                         self.text = self.text[:-len(self.romaji_buffer)] + ROMAJI_MAP[self.romaji_buffer]
                                         self.romaji_buffer = ""
                                     if c == " ":
+                                        self.romaji_buffer = ""
+                                    
+                                    if len(self.romaji_buffer) > 4:
                                         self.romaji_buffer = ""
                     return on_click
 
@@ -193,18 +198,18 @@ class SearchBar:
                 self.is_active = False
         elif event.type == pygame.KEYDOWN and self.is_active:
             if event.key == pygame.K_RETURN:
-                self.on_search(self.text)
+                self.on_search(self.text, self.mode)
                 self.text = ''
             elif event.key == pygame.K_BACKSPACE:
                 self.text = self.text[:-1]
-                if self.mode == "JP":
+                if self.mode == JAPANESE:
                     self.romaji_buffer = self.romaji_buffer[:-1]
             else:
                 # Only add character if max length not exceeded
                 if len(self.text) < self.max_length and (event.unicode.isalpha() or event.unicode.isspace()):
                     self.text += event.unicode
 
-                    if self.mode == "JP":
+                    if self.mode == JAPANESE:
                         self.romaji_buffer += event.unicode
                         if self.romaji_buffer in ROMAJI_MAP:
                             self.text = self.text.replace(self.romaji_buffer, ROMAJI_MAP[self.romaji_buffer])
@@ -217,6 +222,5 @@ class SearchBar:
             for button in self.keyboard_buttons:
                 button.handle_event(event)
 
-    def on_search(self, query):
+    def on_search(self, query, mode):
         """Override this method to define search behavior."""
-        print(f"Search query: {query}")

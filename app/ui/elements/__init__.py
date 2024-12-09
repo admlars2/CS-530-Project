@@ -1,3 +1,3 @@
 from ...ui.elements.button import Button
-from ...ui.elements.search import SearchBar
+from .input import InputBar
 from ...ui.elements.screen_flip import FlipScreenButton

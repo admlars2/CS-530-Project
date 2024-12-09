@@ -28,6 +28,10 @@ APP_FPS = static_config["general"]["fps"]
 SCREEN_WIDTH = static_config["general"]["screen_width"]
 SCREEN_HEIGHT = static_config["general"]["screen_height"]
 
+# Kanji Database
+DATABASE_PATH = os.path.join(project_root, static_config["database"]["database_path"])
+KANJIVG_FOLDER = os.path.join(project_root, static_config["database"]["kanjivg_folder"])
+
 # Fonts
 font_name = static_config["fonts"]["font"]
 font_path = os.path.join(project_root, "fonts", font_name)
@@ -49,6 +53,8 @@ except FileNotFoundError:
     exit()
 
 # Keyboard Settings
+ENGLISH = "EN"
+JAPANESE = "JP"
 KEYBOARD_LAYOUT = static_config["keyboard"]["layout"]
 
 romaji_json_path = static_config["keyboard"]["romaji_json_path"]

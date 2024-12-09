@@ -20,5 +20,7 @@ def run_app():
     app_manager = AppManager(screen)
     app_manager.run()
 
+    app_manager.close_dbs()
+
     pygame.quit()
     sys.exit()
