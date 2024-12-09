@@ -1,2 +1,3 @@
 __pycache__
 .env
+database/study_card.db

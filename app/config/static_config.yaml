@@ -15,5 +15,6 @@ keyboard:
   romaji_json_path: "database/data/romaji_map.json"
 
 database:
-  database_path: "database/kanji.db"
+  word_db_path: "database/kanji.db"
+  study_card_db_path: "database/study_card_db.db"
   kanjivg_folder: "database/kanjivg/"

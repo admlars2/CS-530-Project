@@ -29,7 +29,8 @@ SCREEN_WIDTH = static_config["general"]["screen_width"]
 SCREEN_HEIGHT = static_config["general"]["screen_height"]
 
 # Kanji Database
-DATABASE_PATH = os.path.join(project_root, static_config["database"]["database_path"])
+WORD_DB_PATH = os.path.join(project_root, static_config["database"]["word_db_path"])
+STUDY_CARD_DB_PATH = os.path.join(project_root, static_config["database"]["study_card_db_path"])
 KANJIVG_FOLDER = os.path.join(project_root, static_config["database"]["kanjivg_folder"])
 
 # Fonts

@@ -1,9 +1,9 @@
 import sqlite3
-from ..config import DATABASE_PATH, ENGLISH, JAPANESE
+from ..config import WORD_DB_PATH, ENGLISH, JAPANESE
 
 class WordDatabase:
     def __init__(self):
-        self.conn = sqlite3.connect(DATABASE_PATH)
+        self.conn = sqlite3.connect(WORD_DB_PATH)
         self.cursor = self.conn.cursor()
 
     def close(self):

@@ -9,6 +9,10 @@ word_list_path = os.path.join(database_root, "data", "top_3000_words.csv")
 kanjivg_xml = os.path.join(database_root, "data", "kanjivg.xml")
 kanji_database_path = os.path.join(database_root, "kanji.db")
 
+# Ensure Kanji DB exists
+if not os.path.exists(kanji_database_path):
+    open(kanji_database_path, 'w').close()
+
 # Connect to SQLite
 conn = sqlite3.connect(kanji_database_path)
 cursor = conn.cursor()
