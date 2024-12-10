@@ -40,7 +40,7 @@ class Database(Page):
             result.handle_event(event)
 
     def on_search(self, query, mode):
-        results = self.manager.word_database.search(query, mode)
+        results = self.manager.db_manager.word_db.search(query, mode)
 
         self.search_results = []
 

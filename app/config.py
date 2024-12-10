@@ -61,6 +61,7 @@ KEYBOARD_LAYOUT = static_config["keyboard"]["layout"]
 romaji_json_path = static_config["keyboard"]["romaji_json_path"]
 ROMAJI_MAP = load_json(romaji_json_path)
 
+# Colors
 BACKGROUND_COLOR = dynamic_config["appearance"]["background_color"]
 FONT_COLOR = dynamic_config["appearance"]["font_color"]
 BUTTON_COLOR = dynamic_config["appearance"]["button_color"]
@@ -68,3 +69,6 @@ BUTTON_HOVER_COLOR = dynamic_config["appearance"]["button_hover_color"]
 SEARCH_BAR_COLOR = dynamic_config["appearance"]["search_bar_color"]
 SEARCH_ACTIVE_COLOR = dynamic_config["appearance"]["search_active_color"]
 KEYBOARD_ACTIVE_COLOR = dynamic_config["appearance"]["keyboard_active_color"]
+
+# Learning Settings
+LEARNING_SETTINGS = dynamic_config["learning_algorithm"]

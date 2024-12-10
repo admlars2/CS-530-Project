@@ -16,5 +16,5 @@ keyboard:
 
 database:
   word_db_path: "database/kanji.db"
-  study_card_db_path: "database/study_card_db.db"
+  study_card_db_path: "database/study_card.db"
   kanjivg_folder: "database/kanjivg/"

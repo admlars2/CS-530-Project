@@ -1,8 +1,8 @@
-import pygame, io, cairo
+import pygame
 from .ui import MainMenu, Database, StudyMenu, Word
 from .config import BACKGROUND_COLOR, FONT_COLOR, FONT_MED
 from .ui.elements import Button, FlipScreenButton
-from .database import WordDatabase
+from .database import DBManager
 
 class AppManager:
     # Page keys
@@ -14,7 +14,7 @@ class AppManager:
     PAGE_KEYS = {MAIN, DATABASE, STUDYMENU, WORD}
 
     def __init__(self, screen: pygame.Surface):
-        self.word_database = WordDatabase()
+        self.db_manager = DBManager()
 
         self.screen_width = screen.get_width()
         self.screen_height = screen.get_height()
@@ -44,7 +44,7 @@ class AppManager:
         self.current_page = self.pages[self.MAIN]  # Pass self as manager
 
     def close_dbs(self):
-        self.word_database.close()
+        self.db_manager.close()
 
     def set_background_color(self, color):
         """Change the background color."""
