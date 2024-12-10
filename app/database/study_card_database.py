@@ -37,34 +37,40 @@ class StudyCardDB:
 
     def update_login_and_streak(self) -> tuple[int, int]:
         """
-        Updates the user's streak, max streak, and last login.
-        - If the user logs in on a consecutive day, the streak increases.
-        - If the user skips a day, the streak resets to 1.
-        - The max streak is updated if the current streak exceeds it.
+        Updates the user's streak, best streak, and last login.
+        
+        Logic:
+        - If it's the user's first login (no last_login), initialize streak to 1.
+        - If the user logs in on the same day, do not change the streak.
+        - If the user logs in exactly one day after their last login, increment the streak.
+        - If the user logs in after more than one day since the last login, reset the streak to 1.
+        - Update the best streak if the current streak surpasses it.
         """
-        # Check if the date has changed during the session
         current_date = datetime.now().date()
 
-        # Update cache and determine streak logic
-        if self.last_login:
-            if current_date == self.last_login + timedelta(days=1):
-                # Consecutive day login, increase streak
+        if self.last_login is None:
+            # First login
+            self.daily_streak = 1
+        else:
+            delta_days = (current_date - self.last_login).days
+            if delta_days == 0:
+                # Same day login, no change
+                pass
+            elif delta_days == 1:
+                # Consecutive day login, increment streak
                 self.daily_streak += 1
             else:
-                # Missed a day, reset streak
+                # Missed a day or more, reset streak
                 self.daily_streak = 1
-        else:
-            # First-time login
-            self.daily_streak = 1
 
-        # Update best streak if current streak exceeds it
+        # Update the best streak if needed
         if self.daily_streak > self.best_streak:
             self.best_streak = self.daily_streak
 
-        # Update cache and database
+        # Set the last_login to today
         self.last_login = current_date
-        self.current_date = current_date
 
+        # Update the database
         self.cursor.execute("""
             UPDATE Config
             SET daily_streak = ?, last_login = ?, best_streak = ?
@@ -73,40 +79,62 @@ class StudyCardDB:
         self.conn.commit()
 
         return self.daily_streak, self.best_streak
-    
-    def add_card(self, card_id: int, reversed: bool = False) -> int:
+
+    def count_due_cards(self) -> int:
+        """
+        Counts the number of due cards in the database.
+
+        Returns:
+            int: The number of due cards.
+        """
+        self.cursor.execute("""
+            SELECT COUNT(*)
+            FROM StudyCards
+            WHERE due_date <= ?
+        """, (datetime.now().date(),))
+        return self.cursor.fetchone()[0]
+
+    def get_next_due_card(self) -> dict:
+        """
+        Retrieves the next due card for review.
+
+        Returns:
+            dict: The next card's details.
+        """
+        self.cursor.execute("""
+            SELECT * 
+            FROM StudyCards
+            WHERE due_date <= ?
+            ORDER BY due_date ASC
+            LIMIT 1
+        """, (datetime.now().date(),))
+        result = self.cursor.fetchone()
+        if not result:
+            return None  # No due cards
+        column_names = [description[0] for description in self.cursor.description]
+        return dict(zip(column_names, result))
+
+    def add_card(self, card_id: int, reversed: bool = False) -> None:
         """
         Adds a new card to the database.
-        :param card_id: The ID of the card (e.g., word ID from kanji.db).
-        :param reversed: Whether the card is reversed (default is False).
-        :return: The ID of the newly created card.
+
+        Args:
+            card_id (int): The ID of the card (e.g., word ID from kanji.db).
+            reversed (bool): Whether the card is reversed (default is False).
         """
         self.cursor.execute("""
             INSERT INTO StudyCards (card_id, reversed, due_date)
             VALUES (?, ?, ?)
         """, (card_id, reversed, datetime.now().date()))
         self.conn.commit()
-        return self.cursor.lastrowid
-
-    def get_due_cards(self) -> list[dict]:
-        """
-        Retrieves all cards that are due for review.
-        :return: A list of tuples containing card information.
-        """
-        self.cursor.execute("""
-            SELECT * FROM StudyCards
-            WHERE due_date <= ?
-        """, (datetime.now().date(),))
-        results = self.cursor.fetchall()
-        column_names = [description[0] for description in self.cursor.description]
-        
-        return [dict(zip(column_names, row)) for row in results]
 
     def update_card_review(self, card_id: int, quality: int) -> None:
         """
         Updates a card after it has been reviewed.
-        :param card_id: The ID of the card being reviewed.
-        :param quality: The review quality (1–4).
+
+        Args:
+            card_id (int): The ID of the card being reviewed.
+            quality (int): The review quality (1-4).
         """
         self.cursor.execute("""
             SELECT interval, ease_factor, review_count
@@ -143,13 +171,3 @@ class StudyCardDB:
             WHERE id = ?
         """, (interval, ease_factor, review_count, due_date, quality, datetime.now().date(), card_id))
         self.conn.commit()
-
-    def get_all_cards(self) -> list[tuple]:
-        """
-        Retrieves all cards in the database.
-        :return: A list of tuples containing card information.
-        """
-        self.cursor.execute("SELECT * FROM StudyCards")
-        results = self.cursor.fetchall()
-        column_names = [description[0] for description in self.cursor.description]
-        return [dict(zip(column_names, row)) for row in results]
