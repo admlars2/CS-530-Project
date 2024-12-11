@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from ..config import STUDY_CARD_DB_PATH, LEARNING_SETTINGS
 
 class StudyCardDB:
-    def __init__(self):
+    def __init__(self):        
         self.conn = sqlite3.connect(STUDY_CARD_DB_PATH)
         self.cursor = self.conn.cursor()
 

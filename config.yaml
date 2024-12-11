@@ -13,6 +13,7 @@ appearance:
 
 writing:
   brush_size: 5
+  brush_color: "#000000"
   feedback_correct_color: "#00FF00"
   feedback_incorrect_color: "#FF0000"
 
@@ -20,7 +21,6 @@ learning_algorithm:
   default_ease_factor: 2.5
   min_ease_factor: 1.3
   max_interval: 365
-  learning_steps: "[1, 6]"
   graduation_interval: 10
   lapse_interval_factor: 0.5
   quality_threshold: 3

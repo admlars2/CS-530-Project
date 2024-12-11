@@ -46,14 +46,18 @@ class DBManager:
             self.study_card_db.add_card(card_id, reversed=False)
             self.study_card_db.add_card(card_id, reversed=True)
 
+    def count_cards(self):
+        self.num_study_cards = self.study_card_db.count_due_cards()
+        self.num_new = 0
+
     def aggregate_cards(self):
         """
         Aggregates the cards for the current session by:
         1. Counting all due cards from the StudyCards database.
         2. Generating new cards if the number of due cards is less than the configured new card limit.
         """
-        self.num_study_cards = self.study_card_db.count_due_cards() // 2
-        self.num_new = max(0, LEARNING_SETTINGS["new_card_limit"] - self.num_study_cards)
+        self.num_study_cards = self.study_card_db.count_due_cards()
+        self.num_new = max(0, LEARNING_SETTINGS["new_card_limit"] - self.num_study_cards) * 2
 
         if self.num_new > 0:
             self.generate_and_insert_new_cards(self.num_new)

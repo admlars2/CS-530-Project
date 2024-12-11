@@ -1,7 +1,7 @@
 from ..ui import Page
 from ..ui.elements import Button
-from ..config import KANJIVG_FOLDER, ROMAJI_MAP, FONT_MED
-import os, pygame
+from ..config import KANJIVG_FOLDER
+import os
 
 
 class Word(Page):
@@ -63,22 +63,6 @@ class Word(Page):
         """Handle user input."""
         for component in self.components:
             component.handle_event(event)
-
-    def draw_text(self, text, x_prop, y_prop, font=FONT_MED):
-        """Helper function to draw text on the screen at the given proportions."""
-        x, y, _, _ = self.manager.map_rect(x_prop, y_prop, 0, 0)
-        text_surface = font.render(text, True, self.manager.font_color)
-        text_width, text_height = text_surface.get_size()
-        
-        if self.manager.is_portrait:
-            text_surface = pygame.transform.rotate(text_surface, 90)
-            x -= text_height // 2
-            y -= text_width // 2
-
-        else:
-            x -= text_width // 2
-            y -= text_height // 2
-        self.screen.blit(text_surface, (x, y))
 
     def render_svg(self, svg_path, x_prop, y_prop, side_prop):
         """Render an SVG at the given proportions."""
