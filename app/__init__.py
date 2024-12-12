@@ -4,7 +4,9 @@ from .config import SCREEN_WIDTH, SCREEN_HEIGHT
 
 def is_raspberry_pi():
     # Check for Raspberry Pi using environment variables
-    return platform.system() == 'raspberrypi'
+
+    print(platform.system())
+    return platform.system() == 'raspberrypi' or platform.system() == 'linux'
 
 def run_app():
     pygame.init()
