@@ -1,11 +1,10 @@
-import pygame, os, sys
+import pygame, sys, platform
 from .app_manager import AppManager
 from .config import SCREEN_WIDTH, SCREEN_HEIGHT
 
 def is_raspberry_pi():
     # Check for Raspberry Pi using environment variables
-    return os.getenv('HOSTNAME', '').startswith('raspberrypi') or \
-           os.getenv('PRETTY_NAME', '').lower().find('raspberry pi') != -1
+    return platform.system() == 'raspberrypi'
 
 def run_app():
     pygame.init()
