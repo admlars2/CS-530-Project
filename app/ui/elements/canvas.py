@@ -1,4 +1,5 @@
 import pygame
+from ...config import BRUSH_SIZE, BRUSH_COLOR
 
 class Canvas:
     def __init__(self, manager, y_prop, word_len=1):
@@ -27,8 +28,8 @@ class Canvas:
         self.pressure = 1.0  # default
 
         # Brush attributes
-        self.brush_color = (0, 0, 0)
-        self.base_brush_size = 5
+        self.brush_color = BRUSH_COLOR
+        self.base_brush_size = BRUSH_SIZE
 
         # Keep track of strokes
         self.strokes = []
@@ -37,23 +38,26 @@ class Canvas:
         # Smoothing parameter
         self.smoothing_alpha = 0.5
 
-    def calc_pos(self):
-        side_prop = min((1 - 0.05) / self.word_len, 0.4)
-        x_prop = 0.5 - side_prop * (self.word_len - 1) * 0.5
-        x, y, _, _ = self.manager.map_rect(x_prop, self.y_prop + self.y_prop_disp, 0, 0)
-        self.side_length = self.screen_height * side_prop
+        self.locked = False
 
-        width = int(self.side_length * self.word_len)
-        height = int(self.side_length)
+    def calc_pos(self):
+        # Calculate the side length based on the word length and screen dimensions
+        side_prop = min((1 - 0.05) / self.word_len, 0.4)
+        side_length = int(self.screen_height * side_prop)
+
+        # Calculate the canvas dimensions
+        width = side_length * self.word_len
+        height = side_length
 
         # If portrait, swap width and height
         if self.manager.is_portrait:
             width, height = height, width
 
-        # Center the canvas at (x, y)
-        x -= self.side_length // 2
-        y -= self.side_length // 2
+        # Calculate the canvas position, centered on the screen
+        x = (self.screen_width - width) // 2
+        y = (self.screen_height - height) // 2
 
+        self.side_length = side_length
         return x, y, width, height
 
     def set_length(self, word_len):
@@ -76,6 +80,9 @@ class Canvas:
         pygame.draw.rect(screen, (0, 0, 0), self.draw_rect, width=2)
 
     def handle_event(self, event):
+        if self.locked:
+            return
+
         if event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP):
             x, y = pygame.mouse.get_pos()
         elif event.type in (pygame.FINGERMOTION, pygame.FINGERDOWN, pygame.FINGERUP):
@@ -167,17 +174,19 @@ class Canvas:
                 pressure = (start[2] + end[2]) / 2.0
                 self.draw_line(start_pos, end_pos, pressure=pressure)
 
-        # Redraw main dividers after clearing
+        # Redraw main dividers directly on the canvas surface
         for i in range(1, self.word_len):
             if self.manager.is_portrait:
-                x_1 = self.draw_rect.x
-                y_1 = y_2 = self.draw_rect.y - self.side_length*i
-                x_2 = self.draw_rect.x + self.draw_rect.width
+                x1 = self.draw_rect.x + i * self.side_length
+                y1 = self.draw_rect.y
+                x2 = x1
+                y2 = self.draw_rect.y + self.draw_rect.height
             else:
-                x_1 = x_2 = self.draw_rect.x + self.side_length*i
-                y_1 = self.draw_rect.y
-                y_2 = self.draw_rect.y + self.draw_rect.height
-            pygame.draw.line(self.surface, (0, 0, 0), (x_1, y_1), (x_2, y_2), 2)
+                x1 = self.draw_rect.x
+                y1 = self.draw_rect.y + i * self.side_length
+                x2 = self.draw_rect.x + self.draw_rect.width
+                y2 = y1
+            pygame.draw.line(self.surface, (0, 0, 0), (x1, y1), (x2, y2), 2)
 
     def _smooth_point(self, pos, reset=False):
         if reset or self.last_smoothed_pos is None:

@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, random
 from datetime import datetime, timedelta
 from ..config import STUDY_CARD_DB_PATH, LEARNING_SETTINGS
 
@@ -96,23 +96,31 @@ class StudyCardDB:
 
     def get_next_due_card(self) -> dict:
         """
-        Retrieves the next due card for review.
+        Retrieves the next due card for review, prioritizing cards closer to their due date.
 
         Returns:
             dict: The next card's details.
         """
+        # Fetch a specific number of cards ordered by due date (e.g., top 5)
+        fetch_limit = 5  # Adjust this value as needed
         self.cursor.execute("""
             SELECT * 
             FROM StudyCards
             WHERE due_date <= ?
             ORDER BY due_date ASC
-            LIMIT 1
-        """, (datetime.now().date(),))
-        result = self.cursor.fetchone()
-        if not result:
+            LIMIT ?
+        """, (datetime.now().date(), fetch_limit))
+
+        results = self.cursor.fetchall()
+        if not results:
             return None  # No due cards
+
+        # Introduce a random offset within the fetched range (0 to fetch_limit-1)
+        random_offset = random.randint(0, fetch_limit - 1)
+        selected_card = results[random_offset]
+
         column_names = [description[0] for description in self.cursor.description]
-        return dict(zip(column_names, result))
+        return dict(zip(column_names, selected_card))
 
     def add_card(self, card_id: int, reversed: bool = False) -> None:
         """

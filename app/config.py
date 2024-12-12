@@ -17,12 +17,23 @@ def hex_to_rgb(hex_color):
     hex_color = hex_color.lstrip("#")
     return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
 
+def tint_hex(hex_color, hex_tint):
+    color_rgb = hex_to_rgb(hex_color)
+    tint_rgb = hex_to_rgb(hex_tint)
+
+    # Subtract the difference from the original color to get the result
+    result_rgb = tuple(min(max(0, c1 - c2), 255) for c1, c2 in zip(color_rgb, tint_rgb))
+
+    # Convert the result back to a hex color
+    return '#{:02x}{:02x}{:02x}'.format(*result_rgb)
+
 static_config = load_config(os.path.join("app", "config", "static_config.yaml"))
 dynamic_config = load_config("config.yaml")
 
 # General App Settings
 APP_TITLE = static_config["general"]["app_title"]
 APP_FPS = static_config["general"]["fps"]
+PORTRAIT_DEFAULT = dynamic_config["appearance"]["portrait_default"]
 
 # Rasberry Pi Screen dimensions
 SCREEN_WIDTH = static_config["general"]["screen_width"]
@@ -69,6 +80,15 @@ BUTTON_HOVER_COLOR = dynamic_config["appearance"]["button_hover_color"]
 SEARCH_BAR_COLOR = dynamic_config["appearance"]["search_bar_color"]
 SEARCH_ACTIVE_COLOR = dynamic_config["appearance"]["search_active_color"]
 KEYBOARD_ACTIVE_COLOR = dynamic_config["appearance"]["keyboard_active_color"]
+
+FEEDBACK_BAD_COLOR = dynamic_config["appearance"]["feedback_bad_color"]
+FEEDBACK_OKAY_COLOR = dynamic_config["appearance"]["feedback_okay_color"]
+FEEDBACK_GOOD_COLOR = dynamic_config["appearance"]["feedback_good_color"]
+FEEDBACK_GREAT_COLOR = dynamic_config["appearance"]["feedback_great_color"]
+
+# Brush Settings
+BRUSH_COLOR = dynamic_config["writing"]["brush_color"]
+BRUSH_SIZE = dynamic_config["writing"]["brush_size"]
 
 # Learning Settings
 LEARNING_SETTINGS = dynamic_config["learning_algorithm"]

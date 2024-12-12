@@ -7,15 +7,20 @@ appearance:
   search_active_color: "#646464"
   keyboard_active_color: "#696969"
 
+  feedback_bad_color: "#FF8F8F"
+  feedback_okay_color: "#debf76"
+  feedback_good_color: "#8bc96f"
+  feedback_great_color: "#508D69"
+
   font_size_large: 50
   font_size_med: 24
   font_size_small: 16
 
+  portrait_default: false
+
 writing:
   brush_size: 5
   brush_color: "#000000"
-  feedback_correct_color: "#00FF00"
-  feedback_incorrect_color: "#FF0000"
 
 learning_algorithm:
   default_ease_factor: 2.5

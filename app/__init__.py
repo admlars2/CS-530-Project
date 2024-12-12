@@ -3,15 +3,17 @@ from .app_manager import AppManager
 from .config import SCREEN_WIDTH, SCREEN_HEIGHT
 
 def is_raspberry_pi():
-    # Detect if running on Raspberry Pi
-    return os.name.startswith("arm")
+    # Check for Raspberry Pi using environment variables
+    return os.getenv('HOSTNAME', '').startswith('raspberrypi') or \
+           os.getenv('PRETTY_NAME', '').lower().find('raspberry pi') != -1
 
 def run_app():
     pygame.init()
     
     # Check if running on Raspberry Pi for full-screen mode
     if is_raspberry_pi():
-        screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        pygame.event.set_blocked(pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEWHEEL)
+        screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
     else:
         screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     

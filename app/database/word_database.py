@@ -46,3 +46,18 @@ class WordDatabase:
 
         # Format results as a list of dictionaries
         return [dict(zip(column_names, row)) for row in results]
+    
+    def fetch_card_by_id(self, card_id):
+        query = """
+            SELECT *
+            FROM Words
+            WHERE id = ?;
+        """
+        self.cursor.execute(query, (card_id,))
+        result = self.cursor.fetchone()
+
+        if result:
+            column_names = [description[0] for description in self.cursor.description]
+            return dict(zip(column_names, result))
+        else:
+            return None

@@ -15,6 +15,8 @@ class Button:
 
         if not font:
             self.font = self.manager.font
+        else:
+            self.font = font
 
     def render(self, screen):
         # Map logical rectangle to screen coordinates based on orientation

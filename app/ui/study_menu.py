@@ -1,4 +1,4 @@
-from ..ui import Page, CardFront
+from ..ui import Page, CardFront, CardReview
 from ..ui.elements import Button, Canvas
 
 class StudyMenu(Page):
@@ -11,13 +11,14 @@ class StudyMenu(Page):
 
         self.daily_streak, self.max_daily_streak = self.manager.db_manager.study_card_db.update_login_and_streak()
         self.manager.db_manager.aggregate_cards()
-        self.current_card = self.manager.db_manager.study_card_db.get_next_due_card()
+        self.current_study_card = self.manager.db_manager.study_card_db.get_next_due_card()
+        self.current_card = self.manager.db_manager.word_db.fetch_card_by_id(self.current_study_card["card_id"])
 
         self.studying = False
         self.current_page_key = self.MENU
         self.last_review = 0
 
-        self.canvas = Canvas(manager, 0.5, 3)
+        self.canvas = Canvas(manager, 0.5)
 
         self.start_button = Button(self.manager, (0.5, 0.4, 0.5, 0.07), "Start")
         self.start_button.on_click = self.start_studying
@@ -29,7 +30,7 @@ class StudyMenu(Page):
 
         self.pages = {
             self.CARD_FRONT: CardFront(screen, manager, self),
-            self.CARD_REVIEW: Page(screen, manager)
+            self.CARD_REVIEW: CardReview(screen, manager, self)
         }
         
     def render(self):
@@ -55,6 +56,9 @@ class StudyMenu(Page):
         else:
             self.pages[self.current_page_key].handle_event(event)
 
+    def back_to_menu(self):
+        self.current_page_key = self.MENU
+
     def start_studying(self):
         if self.total_cards > 0:
             self.studying = True
@@ -67,8 +71,11 @@ class StudyMenu(Page):
         self.current_page_key = self.CARD_REVIEW
     
     def update_card(self, was_correct):
-        self.current_card = self.manager.db_manager.review_card_get_next(self.current_card["id"], self.last_review if was_correct else 0)
-        if self.current_card == None:
+        self.current_study_card = self.manager.db_manager.review_card_get_next(self.current_study_card["id"], self.last_review if was_correct else 0)
+        self.canvas.clear()
+
+        if self.current_study_card == None:
             self.current_page_key = self.MENU
         else:
-            self.current_page_key = self.CARD_REVIEW
+            self.current_card = self.manager.db_manager.word_db.fetch_card_by_id(self.current_study_card["card_id"])
+            self.current_page_key = self.CARD_FRONT

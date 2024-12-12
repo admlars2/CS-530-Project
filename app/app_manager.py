@@ -1,6 +1,6 @@
 import pygame
 from .ui import MainMenu, Database, StudyMenu, Word
-from .config import BACKGROUND_COLOR, FONT_COLOR, FONT_MED
+from .config import BACKGROUND_COLOR, FONT_COLOR, FONT_MED, PORTRAIT_DEFAULT
 from .ui.elements import Button, FlipScreenButton
 from .database import DBManager
 
@@ -21,7 +21,7 @@ class AppManager:
         self.screen = screen
         self.background_color = BACKGROUND_COLOR
         self.font_color = FONT_COLOR
-        self.is_portrait = True
+        self.is_portrait = PORTRAIT_DEFAULT
         self.font = FONT_MED
         self.clock = pygame.time.Clock()
         self.running = True
