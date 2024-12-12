@@ -1,7 +1,7 @@
 general:
   app_title: "KANJI TRAINER"
   screen_width: 800
-  screen_height: 480
+  screen_height: 450
   fps: 60
 
 fonts:

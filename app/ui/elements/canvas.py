@@ -146,6 +146,7 @@ class Canvas:
         self.last_pos = None
         self.last_smoothed_pos = None
         self.current_stroke = []
+        self._redraw_strokes()
 
     def draw_line(self, start_pos, end_pos, pressure=1.0):
         brush_size = int(self.base_brush_size * pressure)

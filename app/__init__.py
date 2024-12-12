@@ -14,6 +14,7 @@ def run_app():
     if is_raspberry_pi():
         pygame.event.set_blocked(pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEWHEEL)
         screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+        print("Entering PI Mode...")
     else:
         screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     
