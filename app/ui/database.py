@@ -1,7 +1,7 @@
 from ..ui import Page
 from ..ui.elements import InputBar
 from ..ui.elements import Button
-from ..config import ENGLISH, JAPANESE
+from ..config import FONT_SMALL
 
 class Database(Page):
     def __init__(self, screen, manager):
@@ -10,12 +10,12 @@ class Database(Page):
         self.hover_color = (100, 149, 237)  # CornflowerBlue
         self.text_color = (255, 255, 255)   # White
 
-        search_bar = InputBar(manager, (0.5, 0.2, 0.6, 0.05))
-        search_bar.on_search = self.on_search
+        self.search_bar = InputBar(manager, (0.5, 0.2, 0.6, 0.05))
+        self.search_bar.on_search = self.on_search
 
         self.components = [
             *self.manager.default_header,
-            search_bar
+            self.search_bar
         ]
 
         self.search_results = []
@@ -25,6 +25,8 @@ class Database(Page):
 
     def render(self):
         """Render the page content."""
+        self.draw_text(f"Mode: {self.search_bar.mode}", 0.5, 0.15, font=FONT_SMALL)
+
         for component in self.components:
             component.render(self.screen)
 
