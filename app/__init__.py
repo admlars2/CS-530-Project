@@ -11,9 +11,6 @@ def run_app():
     
     # Check if running on Raspberry Pi for full-screen mode
     if is_raspberry_pi():
-        mouse_events = [pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEWHEEL]
-        for event in mouse_events:
-            pygame.event.set_blocked(event)
         screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
         print("Entering PI Mode...")
     else:

@@ -38,7 +38,7 @@ class Button:
         screen.blit(text_surface, text_rect)    # Display to the screen
 
     def handle_event(self, event):
-        if event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.FINGERMOTION, pygame.FINGERDOWN):
+        if event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN):
             # Get the input coordinates based on event type
             if event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN):
                 input_x, input_y = pygame.mouse.get_pos()
